@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add Task{% endblock %}
+
+{% block body %}
+    {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+    {{ form(form) }}
+{% endblock %}
