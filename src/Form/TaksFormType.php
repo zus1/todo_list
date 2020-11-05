@@ -8,6 +8,8 @@ use App\Entity\User;
 use App\Services\TaskService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,7 +26,6 @@ class TaksFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $assignedToChoices  = $this->taskService->makeFormAssignOptionsArray();
-        $statusChoices = $this->taskService->makeFormStatusOptionsArray();
 
         $builder
             ->add('name', TextType::class)
@@ -32,9 +33,8 @@ class TaksFormType extends AbstractType
               'choices' => $assignedToChoices
             ])
             ->add('description', TextareaType::class)
-            ->add('status', ChoiceType::class, [
-                'choices' => $statusChoices
-            ]);
+            ->add('status', HiddenType::class)
+            ->add('save', SubmitType::class, ['label' => 'Create']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
