@@ -3,10 +3,21 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+        {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block alert %}
+            <div id="alert" style="display: none; position: fixed; z-index: 9999">
+                <div id="notification"></div>
+            </div>
+        {% endblock %}
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

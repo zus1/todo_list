@@ -1,0 +1,26 @@
+App\Entity\Task:
+  constraints:
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+        fields: [name]
+        message: 'This name is already used.'
+  properties:
+    name:
+      - NotBlank: ~
+      - Regex:
+          pattern: '/^[a-z0-9 ]+$/i'
+          message: Name can contain only latters and spaces.
+    assigned_to:
+      - NotBlank: ~
+      - Type:
+          type: Integer
+          message: The value {{ value }} must be valid {{ type }}.
+    description:
+      - NotBlank: ~
+      - Regex:
+          pattern: '/^[A-Za-z0-9_@.!?:,\; ]+$/i'
+          message: Description can contain only valid text.
+    status:
+      - NotBlank: ~
+      - Type:
+          type: Integer
+          message: The value {{ value }} must be valid {{ type }}.
