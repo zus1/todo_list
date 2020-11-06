@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List Tasks{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8 col-lg-8 col-sm-12 offset-md-2 offset-lg-2">
+            {% if is_admin == true %}
+                <p><a href="{{ url("add") }}" class="btn btn-lg btn-outline-secondary" target="_blank">Create Task</a></p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-lg-8 col-sm-12 offset-md-2 offset-lg-2">
+            {% for task in tasks_list %}
+                <div class="task-wrapper">
+                    <div class="task-title">
+                        {{ task.name }}
+                    </div>
+                    <div class="form-group">
+                        Status: {{ task.status | raw }}
+                    </div>
+                    <div class="form-group">
+                        Assigned: {{ task.assigned | raw }}
+                    </div>
+                    <div class="form-group description-box">
+                        {{ task.description }}
+                    </div>
+                </div>
+            {% else %}
+                No tasks jet
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/ajax.js') }}"></script>
+    <script src="{{ asset('js/list.js') }}"></script>
+{% endblock %}
