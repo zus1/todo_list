@@ -82,7 +82,7 @@ class TaskController extends AbstractController
         $errorData = array();
         try {
             $this->validateAjaxTaskUpdate($validator, "status", $newStatus, "Could not update task status", $errorData);
-            $taskService->updateTaskStatus($taskId, $newStatus);
+            $taskService->updateTaskStatus($taskId, $newStatus, $errorData);
         } catch(Exception $e) {
             return new JsonResponse(['error' => 1, "message" => $e->getMessage(), "error_data" => $errorData]);
         }

@@ -9,7 +9,7 @@ services:
     links:
       - db
     volumes:
-      - .:/var/www/html
+      - .:/var/www/html:cached
   db:
     container_name: todo_mysql
     image: mysql

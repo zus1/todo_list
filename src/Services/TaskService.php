@@ -39,6 +39,10 @@ class TaskService
         );
     }
 
+    private function getSingleAllowedStatuses() {
+        return array(self::STATUS_IN_PROGRESS);
+    }
+
     private function getStatusToDbMapping() {
         return array(
             self::STATUS_PENDING => "PENDING",
@@ -132,10 +136,32 @@ class TaskService
         return $select;
     }
 
-    public function updateTaskStatus(int $taskId, int $newStatus) {
+    public function updateTaskStatus(int $taskId, int $newStatus, &$errorData) {
         $task = $this->findTaskForUpdate($taskId);
+        $errorData["old_task_status"] = $task->getStatus(); //in case of blocked status change, we need to revert to old status
+        $this->blockTaskStatusChangeIfNeeded($newStatus, $task);
         $task->setStatus($newStatus);
         $this->entityManager->flush();
+    }
+
+    private function blockTaskStatusChangeIfNeeded(int $newStatus, Task $task) {
+        if(!in_array($newStatus, $this->getSingleAllowedStatuses())) {
+            return;
+        }
+        $user = $this->userRepository->findOneBy(array(
+            'id' => $task->getAssignedTo()
+        ));
+        $allUserTasks = $this->repository->findBy(array(
+            'assigned_to' => $user->getId()
+        ));
+        if(empty($allUserTasks)) {
+            return;
+        }
+        array_walk($allUserTasks, function (Task $task) use ($newStatus) {
+            if((int)$task->getStatus() === $newStatus) {
+                throw new Exception("Status already in use");
+            }
+        });
     }
 
     public function updateTaskAssign(int $taskId, int $newAssign) {

@@ -1,7 +1,25 @@
+let oldStatusId;
+
 function updateTaskStatus(taskId) {
     const statusElement = document.getElementById(taskId);
     const rawTaskId = taskId.split("-")[2];
-    getAjax("/update/task/" + rawTaskId + "/status/" + statusElement.value, handleNotification)
+    oldStatusId = taskId;
+    getAjax("/update/task/" + rawTaskId + "/status/" + statusElement.value, postUpdateTaskStatus)
+}
+
+function postUpdateTaskStatus(data) {
+    if(parseInt(data.error) === 1) {
+        if(data.message === "Status already in use") {
+            const statusElement = document.getElementById(oldStatusId);
+            for(let i = 0; i < statusElement.options.length; i++) {
+                if(parseInt(statusElement.options[i].value) === data.error_data.old_task_status) {
+                    statusElement.options[i].selected = true;
+                    break;
+                }
+            }
+        }
+    }
+    handleNotification(data);
 }
 
 function updateTaskAssign(taskId) {
